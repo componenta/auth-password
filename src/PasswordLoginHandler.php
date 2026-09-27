@@ -84,6 +84,10 @@ final readonly class PasswordLoginHandler implements RequestHandlerInterface
             $this->metadata->extract($request),
         );
 
+        if ($grant instanceof DeniedReasonInterface) {
+            return $this->preAuthenticationPublisher->clear($this->deniedResponses->create($grant));
+        }
+
         return $this->sessionPublisher->publish(
             $request,
             $response,
